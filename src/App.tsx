@@ -9,6 +9,7 @@ import { CorruptJsonError } from '@/services/storage';
 export default function App() {
   const [ready, setReady] = useState(false);
   const [corrupt, setCorrupt] = useState<string | null>(null);
+  const [fatalError, setFatalError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -19,7 +20,11 @@ export default function App() {
         setReady(true);
       } catch (e) {
         if (e instanceof CorruptJsonError) setCorrupt(e.path);
-        else throw e;
+        else {
+          // ponytail: nezakryť tichým throw-om — aby biela obrazovka nikdy nebola záhada.
+          console.error('Bootstrap failed:', e);
+          setFatalError(e instanceof Error ? e.message : String(e));
+        }
       }
     })();
   }, []);
@@ -31,6 +36,13 @@ export default function App() {
       <p className="mt-2 text-sm text-slate-600">
         Otvor priečinok s dátami a súbor oprav alebo obnov zo zálohy.
       </p>
+    </div>
+  );
+  if (fatalError) return (
+    <div className="p-8 max-w-2xl mx-auto">
+      <h1 className="text-xl font-semibold mb-2">Chyba pri štarte</h1>
+      <pre className="text-sm bg-slate-100 p-3 rounded whitespace-pre-wrap">{fatalError}</pre>
+      <p className="mt-2 text-sm text-slate-600">Detaily v konzole (Cmd+Option+I).</p>
     </div>
   );
   if (!ready) return <div className="p-8">Načítavam…</div>;
