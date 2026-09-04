@@ -1,0 +1,36 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Vite
+.vite/
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/Cargo.lock
+src-tauri/gen/
+
+# Editors
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Smoke test artifacts (per plan Task 9)
+dev-scripts/templates/
+dev-scripts/output/
