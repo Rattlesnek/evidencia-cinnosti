@@ -4,6 +4,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { openPath } from '@tauri-apps/plugin-opener';
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import type { DailyLog } from '@/types/domain';
 import { ACTIVITY_TYPES } from '@/types/domain';
 import { useClientsStore } from '@/stores/clientsStore';
@@ -15,11 +16,33 @@ import { ConfirmDeleteDialog } from '@/components/ConfirmDeleteDialog';
 
 const MONTHS = ['Január','Február','Marec','Apríl','Máj','Jún','Júl','August','September','Október','November','December'];
 
+function SortableHead({ col, sort, onToggle, children }: {
+  col: SortCol;
+  sort: { col: SortCol; dir: SortDir };
+  onToggle: (c: SortCol) => void;
+  children: React.ReactNode;
+}) {
+  const active = sort.col === col;
+  const Icon = active ? (sort.dir === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown;
+  return (
+    <TableHead onClick={() => onToggle(col)} className="cursor-pointer select-none">
+      <span className="inline-flex items-center gap-1">
+        {children}
+        <Icon className={`h-3 w-3 ${active ? 'opacity-100' : 'opacity-30'}`} />
+      </span>
+    </TableHead>
+  );
+}
+
+type SortCol = 'date' | 'client' | 'activityType' | 'isDocFilled' | 'isEvupFilled';
+type SortDir = 'asc' | 'desc';
+
 export default function History() {
   const now = new Date();
   const [year, setYear] = useState<number>(now.getFullYear());
   const [month, setMonth] = useState<number>(now.getMonth() + 1); // 1..12
   const [toDelete, setToDelete] = useState<DailyLog | null>(null);
+  const [sort, setSort] = useState<{ col: SortCol; dir: SortDir }>({ col: 'date', dir: 'desc' });
 
   const clients = useClientsStore(s => s.clients);
   const logs = useLogsStore(s => s.logs);
@@ -34,13 +57,42 @@ export default function History() {
     return Array.from(ys).sort((a, b) => b - a);
   }, [logs, now]);
 
+  function toggleSort(col: SortCol) {
+    setSort(s => s.col === col
+      ? { col, dir: s.dir === 'asc' ? 'desc' : 'asc' }
+      : { col, dir: col === 'date' ? 'desc' : 'asc' });
+  }
+
+  function sortKey(l: DailyLog, col: SortCol): string | number {
+    switch (col) {
+      case 'date': return l.date + l.createdAt;
+      case 'client': {
+        const c = clientById.get(l.clientId);
+        return c ? `${c.lastName} ${c.firstName}`.toLowerCase() : '';
+      }
+      case 'activityType':  return l.activityType.toLowerCase();
+      case 'isDocFilled':   return l.isDocFilled ? 1 : 0;
+      case 'isEvupFilled':  return l.isEvupFilled ? 1 : 0;
+    }
+  }
+
   const prefix = `${year}-${String(month).padStart(2, '0')}`;
-  const rows = useMemo(
-    () => logs
+  const rows = useMemo(() => {
+    const sign = sort.dir === 'asc' ? 1 : -1;
+    return logs
       .filter(l => l.date.startsWith(prefix))
-      .sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt)),
-    [logs, prefix],
-  );
+      .slice()
+      .sort((a, b) => {
+        const ka = sortKey(a, sort.col);
+        const kb = sortKey(b, sort.col);
+        if (ka < kb) return -1 * sign;
+        if (ka > kb) return  1 * sign;
+        // tiebreak: novšie createdAt hore
+        return b.createdAt.localeCompare(a.createdAt);
+      });
+    // sortKey uses clientById, but we intentionally depend only on the primary inputs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logs, prefix, sort, clientById]);
 
   const uniqueClients = new Set(rows.map(r => r.clientId)).size;
   const byType: Record<string, number> = {};
@@ -85,11 +137,11 @@ export default function History() {
 
       <Table>
         <TableHeader><TableRow>
-          <TableHead>Dátum</TableHead>
-          <TableHead>Klient</TableHead>
-          <TableHead>Typ činnosti</TableHead>
-          <TableHead>Doc</TableHead>
-          <TableHead>EvuP</TableHead>
+          <SortableHead col="date"          sort={sort} onToggle={toggleSort}>Dátum</SortableHead>
+          <SortableHead col="client"        sort={sort} onToggle={toggleSort}>Klient</SortableHead>
+          <SortableHead col="activityType"  sort={sort} onToggle={toggleSort}>Typ činnosti</SortableHead>
+          <SortableHead col="isDocFilled"   sort={sort} onToggle={toggleSort}>Doc</SortableHead>
+          <SortableHead col="isEvupFilled"  sort={sort} onToggle={toggleSort}>EvuP</SortableHead>
           <TableHead className="text-right">Akcie</TableHead>
         </TableRow></TableHeader>
         <TableBody>
