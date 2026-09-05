@@ -44,7 +44,7 @@ export async function generateDocx(args: {
     meno: client.firstName,
     priezvisko: client.lastName,
     datum_narodenia: formatSk(client.birthDate),
-    rodic: client.parentName,
+    bydlisko: client.address,
     skola: client.school,
     poznamka: client.note,
     typ_cinnosti: log.activityType,

@@ -19,7 +19,7 @@ export async function run() {
   const r = await generateDocx({
     client: {
       id: 't', firstName: 'Jozef', lastName: 'Novák',
-      birthDate: '2015-05-10', parentName: 'Mária Nováková',
+      birthDate: '2015-05-10', address: 'Bratislava, Hlavná 1',
       school: 'ZŠ Test', note: 'smoke', createdAt: new Date().toISOString(),
     },
     log: {

@@ -23,8 +23,12 @@ export function flushClientsForTest() {
 export const useClientsStore = create<State>((set, get) => ({
   clients: [],
   async load() {
-    const data = await storage.read<Client[]>(FILE, []);
-    set({ clients: data });
+    // ponytail: migrate legacy `parentName` → `address` on read; drop when no live JSON has it.
+    const raw = await storage.read<Array<Client & { parentName?: string }>>(FILE, []);
+    const clients: Client[] = raw.map(({ parentName, ...c }) => ({
+      ...c, address: c.address ?? parentName ?? '',
+    }));
+    set({ clients });
   },
   async add(input) {
     const c: Client = { ...input, id: crypto.randomUUID(), createdAt: new Date().toISOString() };

@@ -14,7 +14,7 @@ type Props = {
   onSubmit: (data: Omit<Client, 'id' | 'createdAt'>) => Promise<void> | void;
 };
 
-const empty = { firstName: '', lastName: '', birthDate: '', parentName: '', school: '', note: '' };
+const empty = { firstName: '', lastName: '', birthDate: '', address: '', school: '', note: '' };
 
 export function ClientDialog({ trigger, initial, onSubmit }: Props) {
   const [open, setOpen] = useState(false);
@@ -23,7 +23,7 @@ export function ClientDialog({ trigger, initial, onSubmit }: Props) {
   useEffect(() => {
     if (open) setForm(initial
       ? { firstName: initial.firstName, lastName: initial.lastName, birthDate: initial.birthDate,
-          parentName: initial.parentName, school: initial.school, note: initial.note }
+          address: initial.address, school: initial.school, note: initial.note }
       : empty);
   }, [open, initial]);
 
@@ -46,7 +46,7 @@ export function ClientDialog({ trigger, initial, onSubmit }: Props) {
               className="w-full"
             />
           </div>
-          <div><Label>Rodič</Label><Input value={form.parentName} onChange={e => setForm({ ...form, parentName: e.target.value })} /></div>
+          <div><Label>Bydlisko</Label><Input value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} /></div>
           <div className="col-span-2"><Label>Škola</Label><Input value={form.school} onChange={e => setForm({ ...form, school: e.target.value })} /></div>
           <div className="col-span-2"><Label>Poznámka</Label><Input value={form.note} onChange={e => setForm({ ...form, note: e.target.value })} /></div>
         </div>

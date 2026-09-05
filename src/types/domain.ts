@@ -34,7 +34,7 @@ export interface Client {
   firstName: string;
   lastName: string;
   birthDate: string;      // 'YYYY-MM-DD'
-  parentName: string;
+  address: string;
   school: string;
   note: string;
   createdAt: string;      // ISO datetime

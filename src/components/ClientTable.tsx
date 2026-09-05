@@ -17,7 +17,7 @@ export function ClientTable({ clients, onEdit, onAskDelete }: Props) {
       <TableHeader><TableRow>
         <TableHead>Priezvisko</TableHead><TableHead>Meno</TableHead>
         <TableHead>Dátum nar.</TableHead><TableHead>Škola</TableHead>
-        <TableHead>Rodič</TableHead><TableHead>Poznámka</TableHead>
+        <TableHead>Bydlisko</TableHead><TableHead>Poznámka</TableHead>
         <TableHead className="text-right">Akcie</TableHead>
       </TableRow></TableHeader>
       <TableBody>
@@ -27,7 +27,7 @@ export function ClientTable({ clients, onEdit, onAskDelete }: Props) {
             <TableCell>{c.firstName}</TableCell>
             <TableCell>{formatSk(c.birthDate)}</TableCell>
             <TableCell>{c.school}</TableCell>
-            <TableCell>{c.parentName}</TableCell>
+            <TableCell>{c.address}</TableCell>
             <TableCell className="max-w-xs truncate">{c.note}</TableCell>
             <TableCell className="text-right">
               <ClientDialog
