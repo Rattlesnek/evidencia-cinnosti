@@ -81,7 +81,7 @@ export default function Logs() {
               onOpenDoc={async (log) => {
                 if (!log.generatedDocPath) return;
                 try { await shellOpen(log.generatedDocPath); }
-                catch { toast.error('Súbor už neexistuje, regenerujte.'); }
+                catch (e) { toast.error(`Nepodarilo sa otvoriť súbor: ${String(e)}`); }
               }}
               onRegenerate={(log) => doGenerate(log, { regenerate: true })}
               onDelete={(log) => setToDelete(log)}

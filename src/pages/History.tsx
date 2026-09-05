@@ -101,7 +101,7 @@ export default function History() {
               onOpenDoc={async (log) => {
                 if (!log.generatedDocPath) return;
                 try { await shellOpen(log.generatedDocPath); }
-                catch { toast.error('Súbor už neexistuje, regenerujte.'); }
+                catch (e) { toast.error(`Nepodarilo sa otvoriť súbor: ${String(e)}`); }
               }}
               onRegenerate={regenerate}
               onDelete={(log) => setToDelete(log)}
