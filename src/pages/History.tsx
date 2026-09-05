@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { open as shellOpen } from '@tauri-apps/plugin-shell';
+import { openPath } from '@tauri-apps/plugin-opener';
 import type { DailyLog } from '@/types/domain';
 import { ACTIVITY_TYPES } from '@/types/domain';
 import { useClientsStore } from '@/stores/clientsStore';
@@ -100,7 +100,7 @@ export default function History() {
               onToggleEvup={(log, v) => updateLog(log.id, { isEvupFilled: v })}
               onOpenDoc={async (log) => {
                 if (!log.generatedDocPath) return;
-                try { await shellOpen(log.generatedDocPath); }
+                try { await openPath(log.generatedDocPath); }
                 catch (e) { toast.error(`Nepodarilo sa otvoriť súbor: ${String(e)}`); }
               }}
               onRegenerate={regenerate}

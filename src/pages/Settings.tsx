@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { FolderOpen, RefreshCw, Folder } from 'lucide-react';
 import { open as pickFolder } from '@tauri-apps/plugin-dialog';
-import { open as shellOpen } from '@tauri-apps/plugin-shell';
+import { openPath } from '@tauri-apps/plugin-opener';
 import { exists } from '@tauri-apps/plugin-fs';
 import { join, appLocalDataDir } from '@tauri-apps/api/path';
 import { getVersion } from '@tauri-apps/api/app';
@@ -92,7 +92,7 @@ export default function Settings() {
         <h2 className="text-lg font-semibold">O aplikácii</h2>
         <div>Verzia: <b>{version}</b></div>
         <div>Dátový priečinok: <span className="font-mono">{dataDir}</span></div>
-        <Button variant="outline" size="sm" onClick={() => dataDir && shellOpen(dataDir)}>
+        <Button variant="outline" size="sm" onClick={() => dataDir && openPath(dataDir)}>
           <Folder className="h-4 w-4 mr-1" />Otvoriť dátový priečinok
         </Button>
       </section>

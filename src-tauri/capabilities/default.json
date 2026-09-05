@@ -19,6 +19,8 @@
     { "identifier": "fs:allow-exists",          "allow": [{ "path": "$APPLOCALDATA/**" }, { "path": "$HOME/**" }] },
     { "identifier": "fs:allow-rename",          "allow": [{ "path": "$APPLOCALDATA/**" }, { "path": "$HOME/**" }] },
     "dialog:allow-open",
-    "shell:allow-open"
+    "opener:default",
+    "opener:allow-open-path",
+    "opener:allow-reveal-item-in-dir"
   ]
 }

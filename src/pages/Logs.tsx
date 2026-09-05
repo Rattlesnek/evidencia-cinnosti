@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DatePicker } from '@/components/DatePicker';
 import { toast } from 'sonner';
-import { open as shellOpen } from '@tauri-apps/plugin-shell';
+import { openPath } from '@tauri-apps/plugin-opener';
 import type { ActivityType, DailyLog } from '@/types/domain';
 import { useClientsStore } from '@/stores/clientsStore';
 import { useLogsStore } from '@/stores/logsStore';
@@ -80,7 +80,7 @@ export default function Logs() {
               onToggleEvup={(log, v) => updateLog(log.id, { isEvupFilled: v })}
               onOpenDoc={async (log) => {
                 if (!log.generatedDocPath) return;
-                try { await shellOpen(log.generatedDocPath); }
+                try { await openPath(log.generatedDocPath); }
                 catch (e) { toast.error(`Nepodarilo sa otvoriť súbor: ${String(e)}`); }
               }}
               onRegenerate={(log) => doGenerate(log, { regenerate: true })}
