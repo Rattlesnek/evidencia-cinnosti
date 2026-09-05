@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DatePicker } from '@/components/DatePicker';
 import { toast } from 'sonner';
 import { open as shellOpen } from '@tauri-apps/plugin-shell';
 import type { ActivityType, DailyLog } from '@/types/domain';
@@ -52,7 +52,7 @@ export default function Logs() {
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         <h1 className="text-2xl font-semibold">Denník</h1>
-        <Input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-44" />
+        <DatePicker value={date} onChange={setDate} className="w-52" />
         <span className="text-sm text-slate-500">{dayLogs.length} záznamov</span>
       </div>
 

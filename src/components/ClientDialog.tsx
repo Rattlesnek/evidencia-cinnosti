@@ -5,6 +5,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { DatePicker } from '@/components/DatePicker';
 import type { Client } from '@/types/domain';
 
 type Props = {
@@ -36,7 +37,15 @@ export function ClientDialog({ trigger, initial, onSubmit }: Props) {
         <div className="grid grid-cols-2 gap-3">
           <div><Label>Meno *</Label><Input value={form.firstName} onChange={e => setForm({ ...form, firstName: e.target.value })} /></div>
           <div><Label>Priezvisko *</Label><Input value={form.lastName} onChange={e => setForm({ ...form, lastName: e.target.value })} /></div>
-          <div><Label>Dátum narodenia *</Label><Input type="date" value={form.birthDate} onChange={e => setForm({ ...form, birthDate: e.target.value })} /></div>
+          <div>
+            <Label>Dátum narodenia *</Label>
+            <DatePicker
+              value={form.birthDate}
+              onChange={(v) => setForm({ ...form, birthDate: v })}
+              captionLayout="dropdown"
+              className="w-full"
+            />
+          </div>
           <div><Label>Rodič</Label><Input value={form.parentName} onChange={e => setForm({ ...form, parentName: e.target.value })} /></div>
           <div className="col-span-2"><Label>Škola</Label><Input value={form.school} onChange={e => setForm({ ...form, school: e.target.value })} /></div>
           <div className="col-span-2"><Label>Poznámka</Label><Input value={form.note} onChange={e => setForm({ ...form, note: e.target.value })} /></div>
