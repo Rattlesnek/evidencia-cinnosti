@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatSk, ageAt } from './dateUtils';
+import { formatSk, parseSk, ageAt } from './dateUtils';
 
 describe('formatSk', () => {
   it('formátuje ISO dátum na dd.MM.yyyy', () => {
@@ -7,6 +7,30 @@ describe('formatSk', () => {
   });
   it('doplní vedúce nuly', () => {
     expect(formatSk('2026-01-05')).toBe('05.01.2026');
+  });
+});
+
+describe('parseSk', () => {
+  it('platný dd.MM.yyyy', () => {
+    expect(parseSk('04.09.2026')).toBe('2026-09-04');
+  });
+  it('platný d.M.yyyy bez vedúcich núl', () => {
+    expect(parseSk('4.9.2026')).toBe('2026-09-04');
+  });
+  it('trimuje medzery', () => {
+    expect(parseSk('  4. 9. 2026  ')).toBe('2026-09-04');
+  });
+  it('neplatný kalendárny dátum → null', () => {
+    expect(parseSk('31.02.2020')).toBeNull();
+    expect(parseSk('30.02.2020')).toBeNull();
+    expect(parseSk('31.04.2020')).toBeNull();
+  });
+  it('nesprávny formát → null', () => {
+    expect(parseSk('2026-09-04')).toBeNull();
+    expect(parseSk('4/9/2026')).toBeNull();
+    expect(parseSk('4.9.26')).toBeNull();
+    expect(parseSk('')).toBeNull();
+    expect(parseSk('blabla')).toBeNull();
   });
 });
 
